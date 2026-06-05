@@ -9,11 +9,11 @@ export const LoginPage = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  
+
   const { login } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  
+
   const from = location.state?.from?.pathname || '/';
 
   const handleSubmit = async (e) => {
@@ -22,10 +22,10 @@ export const LoginPage = () => {
       setError('Por favor, ingresa tu correo y contraseña.');
       return;
     }
-    
+
     setIsLoading(true);
     setError('');
-    
+
     const result = await login(email, password);
     if (result.success) {
       navigate(from, { replace: true });
@@ -37,7 +37,7 @@ export const LoginPage = () => {
 
   return (
     <div className="relative flex min-h-screen items-center justify-center bg-slate-50 dark:bg-dark-950 px-4 transition-colors duration-300">
-      
+
       {/* Botón flotante para cambiar de tema */}
       <div className="absolute top-6 right-6">
         <ThemeToggle />
@@ -52,14 +52,14 @@ export const LoginPage = () => {
       {/* Tarjeta de Login Glassmorphic */}
       <div className="w-full max-w-md animate-fade-in">
         <div className="glass rounded-2xl p-8 shadow-xl dark:shadow-indigo-500/5 transition-all duration-300 border border-slate-200/80 dark:border-dark-700/60">
-          
+
           <div className="flex flex-col items-center mb-8">
             {/* Logo del ERP con Gradiente */}
             <div className="h-12 w-12 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center shadow-lg shadow-indigo-600/35 mb-3 text-white font-bold text-xl">
               E
             </div>
             <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-700 dark:from-white dark:to-dark-300">
-              ERP Multisucursal
+              Sistema de Inventario y Compras
             </h1>
             <p className="text-sm text-slate-500 dark:text-dark-400 mt-1">
               Ingresa al portal de administración y finanzas
