@@ -1,0 +1,4 @@
+docker-compose logs backend
+docker-compose exec backend python scripts/migrate_db.py
+docker-compose down -v
+docker-compose up -d --build
