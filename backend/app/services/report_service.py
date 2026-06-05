@@ -1,6 +1,6 @@
 from decimal import Decimal
 from sqlalchemy.orm import Session
-from sqlalchemy import func, and_, or_
+from sqlalchemy import func, and_, or_, case
 from datetime import datetime, date
 from typing import List, Dict, Any, Optional
 from app.models.branch_stock import InventarioSucursal
@@ -179,11 +179,11 @@ class ReportService:
         # En PostgreSQL, usamos TO_CHAR para agrupar por mes
         q = db.query(
             func.to_char(MovimientoInventario.creado_en, 'YYYY-MM').label("mes"),
-            func.sum(func.case(
+            func.sum(case(
                 (MovimientoInventario.tipo.in_(["INGRESO_COMPRA", "TRASLADO_INGRESO", "AJUSTE_INGRESO"]), MovimientoInventario.costo_total),
                 else_=0
             )).label("ingresos"),
-            func.sum(func.case(
+            func.sum(case(
                 (MovimientoInventario.tipo.in_(["SALIDA_VENTA", "TRASLADO_SALIDA", "AJUSTE_SALIDA"]), MovimientoInventario.costo_total),
                 else_=0
             )).label("egresos")

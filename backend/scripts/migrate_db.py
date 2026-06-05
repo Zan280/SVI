@@ -117,6 +117,21 @@ def run_migration():
         else:
             print("  ✓ Sucursal principal ya existe.")
 
+        # ── 7. Corregir check constraint en movimientos_inventario ───────────
+        print("\n[7/6] Corregiendo restricción CHECK en 'movimientos_inventario'...")
+        try:
+            conn.execute(text("ALTER TABLE movimientos_inventario DROP CONSTRAINT IF EXISTS movimientos_inventario_tipo_check"))
+            conn.execute(text("""
+                ALTER TABLE movimientos_inventario 
+                ADD CONSTRAINT movimientos_inventario_tipo_check 
+                CHECK (tipo IN ('INGRESO_COMPRA','SALIDA_VENTA','AJUSTE_INGRESO','AJUSTE_SALIDA','TRASLADO_INGRESO','TRASLADO_SALIDA'))
+            """))
+            conn.commit()
+            print("  ✓ Restricción CHECK de tipos de movimiento actualizada.")
+        except Exception as e:
+            print(f"  ⚠ Advertencia al actualizar la restricción CHECK: {e}")
+
+
     print("\n" + "=" * 60)
     print("✅ Migración completada exitosamente.")
     print("=" * 60)

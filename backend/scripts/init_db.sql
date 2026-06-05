@@ -225,7 +225,7 @@ CREATE TABLE IF NOT EXISTS movimientos_inventario (
     producto_id     INTEGER NOT NULL REFERENCES inventario_base(id),
     sucursal_id     INTEGER NOT NULL REFERENCES sucursales(id),
     tipo            VARCHAR(20) NOT NULL
-                    CHECK (tipo IN ('INGRESO','SALIDA','AJUSTE_POSITIVO','AJUSTE_NEGATIVO','TRASLADO_SALIDA','TRASLADO_INGRESO')),
+                    CHECK (tipo IN ('INGRESO_COMPRA','SALIDA_VENTA','AJUSTE_INGRESO','AJUSTE_SALIDA','TRASLADO_INGRESO','TRASLADO_SALIDA')),
     cantidad        NUMERIC(12,2) NOT NULL CHECK (cantidad > 0),
     costo_unitario  NUMERIC(12,4) DEFAULT 0.0000,
     costo_total     NUMERIC(12,4) DEFAULT 0.0000,
