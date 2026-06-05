@@ -1,4 +1,4 @@
-docker-compose logs backend
-docker-compose exec backend python scripts/migrate_db.py
 docker-compose down -v
 docker-compose up -d --build
+docker-compose logs backend - se puede obviar pq con el siguiente comando ya queda piola xd
+docker-compose exec backend python scripts/migrate_db.py
