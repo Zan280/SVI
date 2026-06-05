@@ -1,4 +1,7 @@
 docker-compose down -v
 docker-compose up -d --build
-docker-compose logs backend - se puede obviar pq con el siguiente comando ya queda piola xd
+docker-compose logs backend
 docker-compose exec backend python scripts/migrate_db.py
+
+# se puede obviar pq con el siguiente comando ya queda piola xd
+# pero si se quiere para estar seguros de que la migracion quedo piola hay que correr este comando
