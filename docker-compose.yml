@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  # --- BASE DE DATOS (POSTGRESQL) ---
+  db:
+    image: postgres:15-alpine
+    container_name: erp_postgres_db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 561834927Garyn
+      POSTGRES_DB: erp_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./backend/scripts/init_db.sql:/docker-entrypoint-initdb.d/init_db.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d erp_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # --- BACKEND (FASTAPI) ---
+  backend:
+    build: ./backend
+    container_name: erp_fastapi_backend
+    restart: always
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+    env_file:
+      - ./backend/.env
+    depends_on:
+      db:
+        condition: service_healthy
+
+  # --- FRONTEND (REACT + VITE) ---
+  frontend:
+    build: ./frontend
+    container_name: erp_react_vite_frontend
+    restart: always
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:
