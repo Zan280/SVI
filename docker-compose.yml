@@ -2,20 +2,19 @@ services:
   # --- BASE DE DATOS (POSTGRESQL) ---
   db:
     image: postgres:15-alpine
-    container_name: erp_postgres_db
+    container_name: svi_postgres_db
     restart: always
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 561834927Garyn
       POSTGRES_DB: svi_db
     ports:
-      - "5432:5432"
-
+      - "5433:5432" # El puerto de tu PC será el 5433
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - svi_pgdata:/var/lib/postgresql/data # Volumen independiente
       - ./backend/scripts/init_db.sql:/docker-entrypoint-initdb.d/init_db.sql
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U postgres -d erp_db" ]
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d svi_db" ] # ◄ Corregido a svi_db
       interval: 5s
       timeout: 5s
       retries: 5
@@ -23,10 +22,10 @@ services:
   # --- BACKEND (FASTAPI) ---
   backend:
     build: ./backend
-    container_name: erp_fastapi_backend
+    container_name: svi_fastapi_backend # ◄ Nombre único
     restart: always
     ports:
-      - "8000:8000"
+      - "8001:8000" # ◄ Cambiado a 8001 en tu PC
     volumes:
       - ./backend:/app
     env_file:
@@ -38,10 +37,10 @@ services:
   # --- FRONTEND (REACT + VITE) ---
   frontend:
     build: ./frontend
-    container_name: erp_react_vite_frontend
+    container_name: svi_react_vite_frontend # ◄ Nombre único
     restart: always
     ports:
-      - "5173:5173"
+      - "5174:5173" # ◄ Cambiado a 5174 en tu PC
     volumes:
       - ./frontend:/app
       - /app/node_modules
@@ -49,4 +48,4 @@ services:
       - backend
 
 volumes:
-  pgdata:
+  svi_pgdata: # ◄ Volumen único para que no compartan datos de disco
