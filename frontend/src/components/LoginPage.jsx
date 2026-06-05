@@ -59,10 +59,10 @@ export const LoginPage = () => {
               E
             </div>
             <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-700 dark:from-white dark:to-dark-300">
-              Sistema de Inventario y Compras
+              Sistema de Inventario y Ventas
             </h1>
             <p className="text-sm text-slate-500 dark:text-dark-400 mt-1">
-              Ingresa al portal de administración y finanzas
+              Ingresa al portal
             </p>
           </div>
 
