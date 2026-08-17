@@ -68,15 +68,20 @@ def eliminar_rol(
     return db_role
 
 
+from typing import List, Optional
+
 # --- USUARIOS ---
 @router.get("/", response_model=List[UsuarioOut])
 def listar_usuarios(
     skip: int = 0,
     limit: int = 100,
+    query: Optional[str] = None,
+    role_id: Optional[int] = None,
+    activo: Optional[bool] = None,
     db: Session = Depends(get_db),
     current_user: Usuario = Depends(require_admin)
 ):
-    return crud_user.get_usuarios(db, skip=skip, limit=limit)
+    return crud_user.get_usuarios(db, skip=skip, limit=limit, query=query, role_id=role_id, activo=activo)
 
 
 @router.get("/{usuario_id}", response_model=UsuarioOut)

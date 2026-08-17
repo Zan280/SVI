@@ -1,3 +1,4 @@
+from typing import Optional
 from sqlalchemy.orm import Session
 from passlib.context import CryptContext
 from app.models.user import Usuario
@@ -14,8 +15,23 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
     return pwd_context.verify(plain_password, hashed_password)
 
 
-def get_usuarios(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(Usuario).offset(skip).limit(limit).all()
+def get_usuarios(
+    db: Session,
+    skip: int = 0,
+    limit: int = 100,
+    query: Optional[str] = None,
+    role_id: Optional[int] = None,
+    activo: Optional[bool] = None
+):
+    q = db.query(Usuario)
+    if query:
+        search_pattern = f"%{query}%"
+        q = q.filter((Usuario.nombre.ilike(search_pattern)) | (Usuario.email.ilike(search_pattern)))
+    if role_id is not None:
+        q = q.filter(Usuario.role_id == role_id)
+    if activo is not None:
+        q = q.filter(Usuario.activo == activo)
+    return q.offset(skip).limit(limit).all()
 
 
 def get_usuario(db: Session, usuario_id: int):

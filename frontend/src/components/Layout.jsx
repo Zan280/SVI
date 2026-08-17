@@ -14,6 +14,8 @@ import {
   ChevronUp,
   LogOut,
   User,
+  Users,
+  Shield,
   LayoutDashboard,
 } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
@@ -49,6 +51,16 @@ const MENU_MODULES = [
       { label: 'Reporte de Ventas', path: '/reportes/ventas', icon: TrendingUp, id: 'nav-ventas' },
     ],
   },
+  {
+    id: 'administracion',
+    label: 'Administración',
+    icon: Shield,
+    color: 'indigo',
+    roles: ['Administrador Global'],
+    submenu: [
+      { label: 'Usuarios (Whitelist)', path: '/usuarios', icon: Users, id: 'nav-usuarios' },
+    ],
+  },
 ];
 
 const colorMap = {
@@ -77,7 +89,7 @@ const colorMap = {
 
 export default function Layout() {
   const [collapsed, setCollapsed] = useState(false);
-  const [openModules, setOpenModules] = useState({ inventario: true, facturacion: false, informes: false });
+  const [openModules, setOpenModules] = useState({ inventario: true, facturacion: false, informes: false, administracion: true });
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -159,6 +171,9 @@ export default function Layout() {
         {/* Navigation – Accordion Modules */}
         <nav className="flex-1 px-3 space-y-1 overflow-y-auto">
           {MENU_MODULES.map((mod) => {
+            if (mod.roles && (!user || !mod.roles.includes(user.role_nombre))) {
+              return null;
+            }
             const IconComponent = mod.icon;
             const isActive = isModuleActive(mod);
             const isOpen = openModules[mod.id];
