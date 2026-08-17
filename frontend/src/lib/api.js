@@ -18,6 +18,9 @@ export const api = {
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
       }).then(r => r.data);
     },
+    googleLogin: (email) => {
+      return axios.post('/api/v1/auth/google-login', { email }).then(r => r.data);
+    },
     me: () => axios.get('/api/v1/auth/me').then(r => r.data)
   },
 

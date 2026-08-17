@@ -5,6 +5,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Layout from './components/Layout';
 import Dashboard from './components/Dashboard';
 import LoginPage from './components/LoginPage';
+import AuthCallback from './views/AuthCallback';
 
 // ── Módulo Inventario ────────────────────────────────────────────────────────
 import InventoryView from './views/InventoryView';
@@ -33,8 +34,9 @@ function App() {
     <ThemeProvider>
       <AuthProvider>
         <Routes>
-          {/* Ruta pública */}
+          {/* Rutas públicas */}
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/auth/callback" element={<AuthCallback />} />
 
           {/* Rutas protegidas bajo el Layout común */}
           <Route

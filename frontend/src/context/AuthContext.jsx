@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import axios from 'axios';
+import { supabase } from '../lib/supabaseClient';
 
 const AuthContext = createContext(null);
 
@@ -13,20 +14,24 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem('token', token);
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       
-      // Consultar endpoint /me para cargar detalles de usuario y rol frescos
-      axios.get('/api/v1/auth/me')
-        .then(response => {
-          setUser(response.data);
-        })
-        .catch(() => {
-          // Token inválido o expirado
-          logout();
-        })
-        .finally(() => {
-          setLoading(false);
-        });
+      // Si el usuario ya está cargado en estado (ej. por loginWithToken o login), no volvemos a resetearlo
+      if (!user) {
+        axios.get('/api/v1/auth/me')
+          .then(response => {
+            setUser(response.data);
+          })
+          .catch((err) => {
+            console.error('Error al validar sesión previa con /me:', err);
+            logout();
+          })
+          .finally(() => {
+            setLoading(false);
+          });
+      } else {
+        setLoading(false);
+      }
     } else {
-      logout();
+      setUser(null);
       setLoading(false);
     }
   }, [token]);
@@ -43,8 +48,10 @@ export const AuthProvider = ({ children }) => {
       });
 
       const { access_token, user: userData } = response.data;
-      setToken(access_token);
+      localStorage.setItem('token', access_token);
+      axios.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
       setUser(userData);
+      setToken(access_token);
       return { success: true };
     } catch (error) {
       console.error('Error de login:', error);
@@ -55,11 +62,25 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const logout = () => {
+  const loginWithToken = (access_token, userData) => {
+    localStorage.setItem('token', access_token);
+    axios.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
+    setUser(userData);
+    setToken(access_token);
+    setLoading(false);
+  };
+
+  const logout = async () => {
+    try {
+      await supabase.auth.signOut();
+    } catch (err) {
+      console.error('Error al cerrar sesión en Supabase:', err);
+    }
     localStorage.removeItem('token');
+    delete axios.defaults.headers.common['Authorization'];
     setToken('');
     setUser(null);
-    delete axios.defaults.headers.common['Authorization'];
+    setLoading(false);
   };
 
   const hasRole = (allowedRoles) => {
@@ -68,10 +89,12 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, loading, login, logout, hasRole }}>
+    <AuthContext.Provider value={{ user, token, loading, login, loginWithToken, logout, hasRole }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
 export const useAuth = () => useContext(AuthContext);
+
+
