@@ -1,49 +1,130 @@
-# ========================
-# Python / Backend
-# ========================
+# ==============================================================================
+# SVI / ERP - Root .gitignore
+# ==============================================================================
+
+# --------------------------------------------------
+# Environment variables & Sensitive Credentials
+# --------------------------------------------------
+.env
+.env.*
+*.env
+backend/.env
+frontend/.env
+!*.env.example
+!.env.example
+
+# Private keys, certificates, and credentials
+*.pem
+*.key
+*.crt
+*.pfx
+*.p12
+*.id_rsa
+*.id_rsa.pub
+credentials.json
+service-account*.json
+
+# --------------------------------------------------
+# Python / FastAPI Backend
+# --------------------------------------------------
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
-*.egg-info/
-dist/
+.Python
 build/
+develop-eggs/
+dist/
+downloads/
+eggs/
 .eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environments
 venv/
 .venv/
+env/
+ENV/
+env.bak/
+venv.bak/
 
-# ========================
-# Node.js / Frontend
-# ========================
+# Testing & Coverage
+.pytest_cache/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.mypy_cache/
+.ruff_cache/
+
+# --------------------------------------------------
+# Node.js / React / Vite Frontend
+# --------------------------------------------------
 node_modules/
+frontend/node_modules/
+dist/
+frontend/dist/
+dist-ssr/
+*.local
+.vite/
+
+# Package manager logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
+lerna-debug.log*
 
-# ========================
-# Vite / Build
-# ========================
-frontend/dist/
-
-# ========================
-# Docker
-# ========================
+# --------------------------------------------------
+# Docker & Database Storage
+# --------------------------------------------------
 pgdata/
+*.sql.bak
+*.dump
+*.db
+*.sqlite
+*.sqlite3
 
-# ========================
-# IDE / Editor
-# ========================
-.vscode/
+# --------------------------------------------------
+# Operating System & IDE Artifacts
+# --------------------------------------------------
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# IDEs / Editors
 .idea/
+.vscode/
+*.sublime-workspace
+*.sublime-project
 *.swp
 *.swo
 *~
-.DS_Store
-Thumbs.db
+*.bak
 
-# ========================
-# Misc
-# ========================
+# --------------------------------------------------
+# Temporary & Residual Files
+# --------------------------------------------------
 *.log
 *.tmp
+*.temp
+.tempmediaStorage/
+scratch/
